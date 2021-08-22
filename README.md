@@ -1,2 +1,2 @@
 # simple-canvas-render
-Created with CodeSandbox
+Created with CodeSandbox by Rioli
