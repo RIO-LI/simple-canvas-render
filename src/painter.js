@@ -1,37 +1,49 @@
-export class CiclePainter {
+export class Painter {
   constructor(ctx) {
-    this.ctx = ctx;
+    this._ctx = ctx;
+    this.offscreenCanvas = document.createElement('canvas');
+    this.offscreenCanvas.setAttribute('width', this._ctx.canvas.width);
+    this.offscreenCanvas.setAttribute('height', this._ctx.canvas.height);
+    this.ctx = this.offscreenCanvas.getContext('2d');
+    this.shapes = [];
+    this.timeController = null;
+    
+    
   }
 
-  paint(shape) {
-    const { config } = shape;
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.rotate(config.angle);
-    this.ctx.arc(config.x, config.y, config.radius, 0, 2 * Math.PI, false);
-    this.ctx.strokeStyle = config.strokeStyle;
-    this.ctx.fillStyle = config.fillStyle;
-    this.ctx.stroke();
-    this.ctx.fill();
-    this.ctx.restore();
-  }
-}
-
-export class RectPainter {
-  constructor(ctx) {
-    this.ctx = ctx;
+  setTimeController(timeController) {
+    this.timeController = timeController;
   }
 
-  paint(shape) {
-    const { config } = shape;
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.rotate(config.angle);
-    this.ctx.rect(config.x, config.y, config.width, config.height);
-    this.ctx.strokeStyle = config.strokeStyle;
-    this.ctx.fillStyle = config.fillStyle;
-    this.ctx.stroke();
-    this.ctx.fill();
-    this.ctx.restore();
+  paint() {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    for (let i = 0, len = this.shapes.length; i < len; i++) {
+      const shape = this.shapes[i];
+      const timeGap = this.timeController.getTimeGap();
+      const fps = this.timeController.getFps();
+      this.ctx.save();
+      this.ctx.beginPath();
+      shape.update(
+        timeGap,
+        this.timeController.duration,
+        fps
+      );
+      shape.buildPath();
+      this.ctx.stroke();
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+    this._ctx.clearRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
+    this._ctx.drawImage(this.offscreenCanvas, 0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
   }
+
+  add(shape) {
+    this.shapes.push(shape);
+    shape.setPainter(this);
+  }
+
+  remove(shape) {
+    this.shapes = this.shapes.filter(item => item != shape);
+  }
+
 }
