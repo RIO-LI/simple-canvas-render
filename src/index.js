@@ -15,37 +15,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const s1 = new Circle(
     {
-      x: 100,
-      y: 100,
-      radius: 50,
-      angle: 0,
-      strokeStyle: "blue",
-      fillStyle: "red"
+      shape: {
+        x: 100,
+        y: 100,
+        radius: 50,
+        angle: 0,
+        strokeStyle: "blue",
+        fillStyle: "red"
+      },
+
     },
     [new Translate()]
   );
 
   const s2 = new Rect(
     {
-      x: 200,
-      y: 200,
-      width: 100,
-      height: 50,
-      angle: 0,
-      strokeStyle: "orange",
-      fillStyle: "yellow"
+      shape: {
+        x: 200,
+        y: 200,
+        width: 100,
+        height: 50,
+        angle: 0,
+        strokeStyle: "orange",
+        fillStyle: "yellow"
+      },
+
     },
     [new Rotate()]
   );
   const s3 = new Rect(
     {
-      x: 400,
-      y: 400,
-      width: 100,
-      height: 100,
-      angle: 45 * Math.PI / 180,
-      strokeStyle: "bule",
-      fillStyle: "skyblue"
+      shape: {
+        x: 400,
+        y: 400,
+        width: 100,
+        height: 100,
+        angle: 45 * Math.PI / 180,
+        strokeStyle: "bule",
+        fillStyle: "skyblue"
+      },
+
     },
     [new Rotate()]
   );
@@ -55,10 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const an2 = new Animator(ctx, painter, 5000, Easing.Back.InOut);
   an.start()
     .finish(() => {
-      
+
       painter.add(s3);
       an2.start();
-      console.log(s1,s2, s3);
+      console.log(s1, s2, s3);
     });
 })
 
